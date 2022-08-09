@@ -16,3 +16,7 @@ body {
 a:link {
   text-decoration: none;
 }
+
+.home-link:hover {
+  color: $primary !important;
+}

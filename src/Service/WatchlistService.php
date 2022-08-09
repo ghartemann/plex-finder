@@ -37,7 +37,7 @@ class WatchlistService
             'duration%2C' .
             'thumb%2C' .
             'rating' .
-            '&includeElements=Guid&sort=watchlistedAt%3Adesc&type=1&X-Plex-Token=' . self::TOKEN);
+            '&includeElements=Guid&sort=watchlistedAt%3Adesc&type=1&X-Plex-Token=' . self::TOKEN . '&x-plex-container-size=200');
         $statusCode = $response->getStatusCode();
 
         $data = [];
@@ -61,7 +61,7 @@ class WatchlistService
     // get info missing from the simple watchlist request (summary)
     public function getMissingInfo($ratingKey): array
     {
-        $response = $this->client->request('GET', 'https://metadata.provider.plex.tv/library/metadata/' . $ratingKey . '?X-Plex-Token=' . self::TOKEN);
+        $response = $this->client->request('GET', 'https://metadata.provider.plex.tv/library/metadata/' . $ratingKey . '?X-Plex-Token=' . self::TOKEN . '&x-plex-container-size=200');
         $xmlData = $response->getContent();
         $xmlData = simplexml_load_string($xmlData);
         $jsonData = json_encode($xmlData);

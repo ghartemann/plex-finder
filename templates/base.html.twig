@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Welcome!{% endblock %}</title>
+    <title>{% block title %}{% endblock %}Plex Finder</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="icon"
           href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
@@ -19,7 +19,9 @@
 <div class="container">
     <div class="row d-flex justify-content-center">
         <div class="col-3 m-4">
-            <img id="plexLogo" src="{{ asset("build/images/Plex_logo_2022.png") }}" alt="Plex logo" width="100%">
+            <a href="{{ path('app_home') }}">
+                <img id="plexLogo" src="{{ asset("build/images/Plex_logo_2022.png") }}" alt="Plex logo" width="100%">
+            </a>
         </div>
     </div>
 </div>
