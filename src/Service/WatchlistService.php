@@ -43,8 +43,8 @@ class WatchlistService
         $data = [];
 
         if ($statusCode == '200') {
-            $xmlData = $response->getContent();
-            $xmlData = simplexml_load_string($xmlData);
+            $dataFromAPI = $response->getContent();
+            $xmlData = simplexml_load_string($dataFromAPI);
             $jsonData = json_encode($xmlData);
             $data = json_decode($jsonData, true);
         }

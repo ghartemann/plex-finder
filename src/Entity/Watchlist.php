@@ -35,6 +35,21 @@ class Watchlist
     #[ORM\Column(type: Types::TEXT)]
     private ?string $summary = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $director = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $tagline = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $slug = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $studio = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $originalTitle = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +135,66 @@ class Watchlist
     public function setSummary(string $summary): self
     {
         $this->summary = $summary;
+
+        return $this;
+    }
+
+    public function getDirector(): ?string
+    {
+        return $this->director;
+    }
+
+    public function setDirector(string $director): self
+    {
+        $this->director = $director;
+
+        return $this;
+    }
+
+    public function getTagline(): ?string
+    {
+        return $this->tagline;
+    }
+
+    public function setTagline(string $tagline): self
+    {
+        $this->tagline = $tagline;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getStudio(): ?string
+    {
+        return $this->studio;
+    }
+
+    public function setStudio(string $studio): self
+    {
+        $this->studio = $studio;
+
+        return $this;
+    }
+
+    public function getOriginalTitle(): ?string
+    {
+        return $this->originalTitle;
+    }
+
+    public function setOriginalTitle(string $originalTitle): self
+    {
+        $this->originalTitle = $originalTitle;
 
         return $this;
     }

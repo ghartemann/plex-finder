@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Plex Finder{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="col-3 m-5">
+                <img id="plexLogo" src="{{ asset("build/images/Plex_logo_2022.png") }}" alt="Plex logo" width="100%">
+            </div>
+        </div>
+    </div>
+
+    <div class="container d-flex flex-column justify-content-center align-items-center">
+        <a href="{{ path('app_import') }}">
+            <button class="btn btn-primary text-white mb-5 shadow">Sync</button>
+        </a>
+        <div class="row row-cols-1 row-cols-md-2 d-flex gap-3 justify-content-center">
+            {% for movie in movies %}
+                {% if movie.status %}
+
+                    <div class="card mb-3 p-0 shadow" style="max-width: 540px;">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <a href="{{ path('app_watchlist_show', {'slug': movie.slug}) }}">
+                                    <img src="{{ movie.thumbnail }}" class="img-fluid rounded-start"
+                                         alt="{{ movie.title }} cover">
+                                </a>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body h-100 d-flex flex-column justify-content-between">
+                                    <div>
+                                        <a href="{{ path('app_watchlist_show', {'slug': movie.slug}) }}">
+                                            <h5 class="card-title text-dark">
+                                                {{ movie.title }}
+                                                {% if movie.originalTitle %}
+                                                    ({{ movie.originalTitle }})
+                                                {% endif %}
+                                            </h5>
+                                        </a>
+                                        <a href="{{ path('app_watchlist_show', {'slug': movie.slug}) }}">
+                                            <p class="card-text text-dark">{{ movie.summary|length > 230 ? movie.summary|slice(0, 230) ~ '...' : movie.summary }}</p>
+                                        </a>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <p class="card-text mb-0">
+                                            {# TODO: make this work ffs #}
+                                            <small class="text-muted">{{ movie.duration / 1000 / 60 / 60 }}
+                                                h</small>
+                                        </p>
+                                        <p class="card-text mb-0">
+                                            <small class="text-muted">{{ movie.rating *10 }}%</small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

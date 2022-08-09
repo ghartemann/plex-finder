@@ -22,7 +22,7 @@ class ImportController extends AbstractController
      * @throws ClientExceptionInterface
      */
     #[Route('/import', name: 'app_import')]
-    public function index(
+    public function import(
         WatchlistRepository $watchlistRepository,
         WatchlistService    $watchlistService
     ): Response
@@ -35,6 +35,13 @@ class ImportController extends AbstractController
                 // get missing info
                 $missingInfo = $watchlistService->getMissingInfo($dataElement['@attributes']['ratingKey']);
 
+                $directorNames = [];
+                foreach ($missingInfo['Video']['Director'] as $director) {
+                    $directorNames[] = $director['tag'];
+                }
+
+                $directorNameList = implode(', ', $directorNames);
+
                 $watchlist = new Watchlist();
                 $watchlist
                     ->setTitle($dataElement['@attributes']['title'])
@@ -42,13 +49,41 @@ class ImportController extends AbstractController
                     ->setDuration($dataElement['@attributes']['duration'])
                     ->setRating($dataElement['@attributes']['rating'])
                     ->setThumbnail($dataElement['@attributes']['thumb'])
-                    ->setSummary($missingInfo["Video"]['@attributes']['summary']);
+                    ->setSummary($missingInfo["Video"]['@attributes']['summary'])
+                    ->setDirector($directorNameList)
+                    ->setSlug($missingInfo['Video']['@attributes']['slug'])
+                    ->setStudio($missingInfo['Video']['@attributes']['studio']);
+
+                if (isset($missingInfo['Video']['@attributes']['tagline']))
+                    $watchlist->setTagline($missingInfo['Video']['@attributes']['tagline']);
+
+                // TODO: this doesn't work
+                if (isset($missingInfo['Video']['@attributes']['originaltitle'])) {
+                    $watchlist->setOriginalTitle($missingInfo['Video']['@attributes']['original_title']);
+                }
+
                 $watchlistRepository->add($watchlist, true);
             }
         }
 
+        // hide entries that aren't in Plex watchlist any more
         $movies = $watchlistRepository->findAll();
 
-        return $this->render('import/index.html.twig', ['movies' => $movies]);
+        $moviesFromAPI = $watchlistService->getWatchlist();
+        $moviesTitles = [];
+        
+        foreach ($moviesFromAPI['Video'] as $movieSingular) {
+            $moviesTitles[] = $movieSingular['@attributes']['title'];
+        }
+
+        foreach ($movies as $movie) {
+            if (!in_array($movie->getTitle(), $moviesTitles)) {
+                $watchlist = $watchlistRepository->findOneBy(['title' => $movie->getTitle()]);
+                $watchlist->setStatus(false);
+                $watchlistRepository->add($watchlist, true);
+            }
+        }
+
+        return $this->redirectToRoute('app_watchlist_index');
     }
 }
