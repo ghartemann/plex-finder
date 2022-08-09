@@ -3,14 +3,6 @@
 {% block title %}Plex Finder{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <div class="row d-flex justify-content-center">
-            <div class="col-3 m-5">
-                <img id="plexLogo" src="{{ asset("build/images/Plex_logo_2022.png") }}" alt="Plex logo" width="100%">
-            </div>
-        </div>
-    </div>
-
     <div class="container d-flex flex-column justify-content-center align-items-center">
         <a href="{{ path('app_import') }}">
             <button class="btn btn-primary text-white mb-5 shadow">Sync</button>
@@ -19,7 +11,7 @@
             {% for movie in movies %}
                 {% if movie.status %}
 
-                    <div class="card mb-3 p-0 shadow" style="max-width: 540px;">
+                    <div class="card mb-3 p-0 shadow border-0" style="max-width: 540px;">
                         <div class="row g-0">
                             <div class="col-md-4">
                                 <a href="{{ path('app_watchlist_show', {'slug': movie.slug}) }}">

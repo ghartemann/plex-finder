@@ -50,6 +50,9 @@ class Watchlist
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $originalTitle = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $banner = 'https://creativecloud.adobe.com/content/dam/2015/8/article-marquee/article-marquee7.jpg';
+
     public function getId(): ?int
     {
         return $this->id;
@@ -195,6 +198,18 @@ class Watchlist
     public function setOriginalTitle(string $originalTitle): self
     {
         $this->originalTitle = $originalTitle;
+
+        return $this;
+    }
+
+    public function getBanner(): ?string
+    {
+        return $this->banner;
+    }
+
+    public function setBanner(string $banner): self
+    {
+        $this->banner = $banner;
 
         return $this;
     }
