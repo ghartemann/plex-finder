@@ -1,1 +1,18 @@
 @import "~bootstrap/scss/bootstrap";
+
+/* ---------- GLOBAL POLICIES ---------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-image: radial-gradient(circle, #00ff81, #00ed9e, #00d9b0, #00c4b6, #00aeb2, #029ea9, #118e9e, #1d7e92, #277085, #2c6276, #2f5567, #2f4858);
+  background-position: center;
+  background-attachment: fixed;
+}
+
+//#plexLogo {
+//  max-width: 300px;
+//}

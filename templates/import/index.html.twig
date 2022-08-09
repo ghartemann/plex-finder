@@ -1,26 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ImportController!{% endblock %}
+{% block title %}Plex Finder{% endblock %}
 
 {% block body %}
-    {% for dataElement in data.Video %}
-        <div class="card mb-3" style="max-width: 540px;">
-            <div class="row g-0">
-                <div class="col-md-4">
-                    <img src="{{ dataElement["@attributes"].thumb }}" class="img-fluid rounded-start"
-                         alt="{{ dataElement["@attributes"].title }}">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ dataElement["@attributes"].title }}</h5>
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                            additional content. This content is a little bit longer.</p>
-                        <p class="card-text"><small
-                                    class="text-muted">{{ dataElement["@attributes"].duration / 1000 / 60 / 60 }}</small>
-                        </p>
-                    </div>
-                </div>
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="col-3 m-5">
+                <img id="plexLogo" src="{{ asset("build/images/Plex_logo_2022.png") }}" alt="Plex logo" width="100%">
             </div>
         </div>
-    {% endfor %}
+    </div>
+
+    <div class="container d-flex justify-content-center">
+        <div class="row row-cols-1 row-cols-md-2 d-flex gap-3 justify-content-center">
+            {% for movie in movies %}
+                <div class="card mb-3 p-0 shadow" style="max-width: 540px;">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="{{ movie.thumbnail }}" class="img-fluid rounded-start"
+                                 alt="{{ movie.title }} cover">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body h-100 d-flex flex-column justify-content-between">
+                                <div>
+                                    <h5 class="card-title">{{ movie.title }}</h5>
+                                    <p class="card-text">{{ movie.summary|length > 230 ? movie.summary|slice(0, 230) ~ '...' : movie.summary }}</p>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <p class="card-text mb-0">
+                                        {# TODO: make this work ffs #}
+                                        <small class="text-muted">{{ movie.duration / 1000 / 60 / 60 }} h</small>
+                                    </p>
+                                    <p class="card-text mb-0">
+                                        <small class="text-muted">{{ movie.rating *10 }}%</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}
