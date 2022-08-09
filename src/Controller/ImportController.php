@@ -41,7 +41,6 @@ class ImportController extends AbstractController
                 }
 
                 $directorNameList = implode(', ', $directorNames);
-
                 $watchlist = new Watchlist();
                 $watchlist
                     ->setTitle($dataElement['@attributes']['title'])
@@ -53,6 +52,9 @@ class ImportController extends AbstractController
                     ->setDirector($directorNameList)
                     ->setSlug($missingInfo['Video']['@attributes']['slug'])
                     ->setStudio($missingInfo['Video']['@attributes']['studio']);
+
+                if (isset($missingInfo['Video']['@attributes']['banner']))
+                    $watchlist->setBanner($missingInfo['Video']['@attributes']['art']);
 
                 if (isset($missingInfo['Video']['@attributes']['tagline']))
                     $watchlist->setTagline($missingInfo['Video']['@attributes']['tagline']);
@@ -71,7 +73,7 @@ class ImportController extends AbstractController
 
         $moviesFromAPI = $watchlistService->getWatchlist();
         $moviesTitles = [];
-        
+
         foreach ($moviesFromAPI['Video'] as $movieSingular) {
             $moviesTitles[] = $movieSingular['@attributes']['title'];
         }
