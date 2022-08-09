@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ImportController!{% endblock %}
+
+{% block body %}
+    {% for dataElement in data.Video %}
+        <div class="card mb-3" style="max-width: 540px;">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="{{ dataElement["@attributes"].thumb }}" class="img-fluid rounded-start"
+                         alt="{{ dataElement["@attributes"].title }}">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ dataElement["@attributes"].title }}</h5>
+                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                            additional content. This content is a little bit longer.</p>
+                        <p class="card-text"><small
+                                    class="text-muted">{{ dataElement["@attributes"].duration / 1000 / 60 / 60 }}</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
