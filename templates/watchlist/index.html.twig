@@ -5,7 +5,11 @@
 {% block body %}
     <div class="container d-flex flex-column justify-content-center align-items-center">
         <a href="{{ path('app_import') }}">
-            <button class="btn btn-primary text-white mb-5 shadow">
+            {# TODO: tooltip won't work yet #}
+            <button class="btn btn-primary text-white mb-5 shadow"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    title="Tooltip on top">
                 <i class="fa-solid fa-arrow-rotate-right"></i>
                 Sync
             </button>

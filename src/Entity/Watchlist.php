@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\WatchlistRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -55,6 +57,14 @@ class Watchlist
 
     #[ORM\Column(length: 255)]
     private ?string $plexLink = null;
+
+    #[ORM\OneToMany(mappedBy: 'movie', targetEntity: Finder::class)]
+    private Collection $finders;
+
+    public function __construct()
+    {
+        $this->finders = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -225,6 +235,36 @@ class Watchlist
     public function setPlexLink(string $plexLink): self
     {
         $this->plexLink = $plexLink;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Finder>
+     */
+    public function getFinders(): Collection
+    {
+        return $this->finders;
+    }
+
+    public function addFinder(Finder $finder): self
+    {
+        if (!$this->finders->contains($finder)) {
+            $this->finders->add($finder);
+            $finder->setMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFinder(Finder $finder): self
+    {
+        if ($this->finders->removeElement($finder)) {
+            // set the owning side to null (unless already changed)
+            if ($finder->getMovie() === $this) {
+                $finder->setMovie(null);
+            }
+        }
 
         return $this;
     }

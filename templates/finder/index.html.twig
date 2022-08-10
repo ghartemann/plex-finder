@@ -3,18 +3,79 @@
 {% block title %}Hello FinderController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="container center d-none">
+        {% for movie in movies %}
+            {% if loop.index == 1 %}
+                <div class="card border-0" id='tinder' style="width: 18rem;">
+                    <img src="{{ movie.thumbnail }}" class="card-img-top" alt="{{ movie.title }} cover">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ movie.title }}</h5>
+                        <p class="d-none" id="interestId">{{ movie.id }}</p>
+                        <button class="btn">
+                            <a href="#" class="btn btn-danger" value="dislike">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                     class="bi bi-x-circle" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </a>
+                        </button>
+                        <button class="btn">
+                            <a href="#" class="btn btn-primary" value="like">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                     class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                          d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                                </svg>
+                            </a>
+                        </button>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    {% if not movies %}
+        <div class="container">
+            <div class="row">
+                <div class="col-12 d-flex flex-column justify-content-center" style="min-height: 100vh">
+                    <h2 class="text-center pt-5 mt-5 text-white">Nothing to display... yet?</h2>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/Users/guillaumehartemann/Dev/Perso/plex-finder/src/Controller/FinderController.php'|file_link(0) }}">src/Controller/FinderController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/Users/guillaumehartemann/Dev/Perso/plex-finder/templates/finder/index.html.twig'|file_link(0) }}">templates/finder/index.html.twig</a></code></li>
-    </ul>
-</div>
+    <div class="tinder">
+        <div class="tinder--status">
+            <i class="fa fa-remove"></i>
+            <i class="fa fa-heart"></i>
+        </div>
+
+        <div class="tinder--cards">
+            {% for movie in movies %}
+                <div class="tinder--card shadow" data-interestid="{{ movie.id }}">
+                    <img src="{{ movie.thumbnail }}">
+                    <h3 class="text-primary">{{ movie.title }}</h3>
+                    <p class="d-none" id="interestId">{{ movie.id }}</p>
+                    <button class="btn">
+                        <a href="#" class="btn btn-danger" value="dislike">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-x-lg text-white" viewbox="0 0 16 16">
+                                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                            </svg>
+                        </a>
+                    </button>
+                    <button class="btn">
+                        <a href="#" class="btn btn-primary" value="like">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-heart-fill" viewbox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                            </svg>
+                        </a>
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

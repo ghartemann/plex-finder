@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -26,6 +28,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Finder::class)]
+    private Collection $finders;
+
+    public function __construct()
+    {
+        $this->finders = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -95,5 +105,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, Finder>
+     */
+    public function getFinders(): Collection
+    {
+        return $this->finders;
+    }
+
+    public function addFinder(Finder $finder): self
+    {
+        if (!$this->finders->contains($finder)) {
+            $this->finders->add($finder);
+            $finder->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFinder(Finder $finder): self
+    {
+        if ($this->finders->removeElement($finder)) {
+            // set the owning side to null (unless already changed)
+            if ($finder->getUser() === $this) {
+                $finder->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
