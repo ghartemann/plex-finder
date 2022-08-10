@@ -44,10 +44,10 @@ class MovieRepository extends ServiceEntityRepository
 //     */
 //    public function findByExampleField($value): array
 //    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
+//        return $this->createQueryBuilder('w')
+//            ->andWhere('w.exampleField = :val')
 //            ->setParameter('val', $value)
-//            ->orderBy('m.id', 'ASC')
+//            ->orderBy('w.id', 'ASC')
 //            ->setMaxResults(10)
 //            ->getQuery()
 //            ->getResult()
@@ -56,8 +56,8 @@ class MovieRepository extends ServiceEntityRepository
 
 //    public function findOneBySomeField($value): ?Movie
 //    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
+//        return $this->createQueryBuilder('w')
+//            ->andWhere('w.exampleField = :val')
 //            ->setParameter('val', $value)
 //            ->getQuery()
 //            ->getOneOrNullResult()

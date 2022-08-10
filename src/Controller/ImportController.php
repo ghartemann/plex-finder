@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Watchlist;
-use App\Repository\WatchlistRepository;
+use App\Entity\Movie;
+use App\Repository\MovieRepository;
 use App\Service\WatchlistService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,15 +23,15 @@ class ImportController extends AbstractController
      */
     #[Route('/import', name: 'app_import')]
     public function import(
-        WatchlistRepository $watchlistRepository,
-        WatchlistService    $watchlistService
+        MovieRepository  $movieRepository,
+        WatchlistService $watchlistService
     ): Response
     {
         // fetching data from service
         $data = $watchlistService->getWatchlist();
 
         foreach ($data["Video"] as $dataElement) {
-            if ($watchlistRepository->findOneBy(['title' => $dataElement['@attributes']['title']]) == null) {
+            if ($movieRepository->findOneBy(['title' => $dataElement['@attributes']['title']]) == null) {
                 // get missing info
                 $missingInfo = $watchlistService->getMissingInfo($dataElement['@attributes']['ratingKey']);
 
@@ -42,9 +42,9 @@ class ImportController extends AbstractController
                 }
 
                 $directorNameList = implode(', ', $directorNames);
-                
-                $watchlist = new Watchlist();
-                $watchlist
+
+                $movie = new Movie();
+                $movie
                     ->setTitle($dataElement['@attributes']['title'])
                     ->setYear($dataElement['@attributes']['year'])
                     ->setDuration($dataElement['@attributes']['duration'])
@@ -56,25 +56,25 @@ class ImportController extends AbstractController
                     ->setStudio($missingInfo['Video']['@attributes']['studio']);
 
                 if (isset($dataElement['@attributes']['rating']))
-                    $watchlist->setRating($dataElement['@attributes']['rating']);
+                    $movie->setRating($dataElement['@attributes']['rating']);
 
                 if (isset($missingInfo['Video']['@attributes']['banner']))
-                    $watchlist->setBanner($missingInfo['Video']['@attributes']['art']);
+                    $movie->setBanner($missingInfo['Video']['@attributes']['art']);
 
                 if (isset($missingInfo['Video']['@attributes']['tagline']))
-                    $watchlist->setTagline($missingInfo['Video']['@attributes']['tagline']);
+                    $movie->setTagline($missingInfo['Video']['@attributes']['tagline']);
 
                 // TODO: this doesn't work
                 if (isset($missingInfo['Video']['@attributes']['originaltitle'])) {
-                    $watchlist->setOriginalTitle($missingInfo['Video']['@attributes']['original_title']);
+                    $movie->setOriginalTitle($missingInfo['Video']['@attributes']['original_title']);
                 }
 
-                $watchlistRepository->add($watchlist, true);
+                $movieRepository->add($movie, true);
             }
         }
 
-        // hide entries that aren't in Plex watchlist any more
-        $movies = $watchlistRepository->findAll();
+        // hide entries that aren't in Plex movie any more
+        $movies = $movieRepository->findAll();
 
         $moviesFromAPI = $watchlistService->getWatchlist();
         $moviesTitles = [];
@@ -85,9 +85,9 @@ class ImportController extends AbstractController
 
         foreach ($movies as $movie) {
             if (!in_array($movie->getTitle(), $moviesTitles)) {
-                $watchlist = $watchlistRepository->findOneBy(['title' => $movie->getTitle()]);
-                $watchlist->setStatus(false);
-                $watchlistRepository->add($watchlist, true);
+                $movie = $movieRepository->findOneBy(['title' => $movie->getTitle()]);
+                $movie->setStatus(false);
+                $movieRepository->add($movie, true);
             }
         }
 

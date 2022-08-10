@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Watchlist;
-use App\Repository\WatchlistRepository;
+use App\Entity\Movie;
+use App\Repository\MovieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,17 +12,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class WatchlistController extends AbstractController
 {
     #[Route('', name: 'index')]
-    public function index(WatchlistRepository $watchlistRepository,): Response
+    public function index(MovieRepository $movieRepository,): Response
     {
-        //fetching all movies from watchlist
-        $movies = $watchlistRepository->findAll();
+        //fetching all movies
+        $movies = $movieRepository->findAll();
 
         return $this->render('watchlist/index.html.twig', ['movies' => $movies]);
     }
 
     #[Route('/{slug}', name: 'show')]
-    public function show(Watchlist $watchlist): Response
+    public function show(Movie $movie): Response
     {
-        return $this->render('watchlist/show.html.twig', ['movie' => $watchlist]);
+        return $this->render('watchlist/show.html.twig', ['movie' => $movie]);
     }
 }

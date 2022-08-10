@@ -2,20 +2,20 @@
 
 namespace App\Service;
 
-use App\Repository\WatchlistRepository;
+use App\Repository\MovieRepository;
 
 class RandomArtService
 {
-    private WatchlistRepository $watchlistRepository;
+    private MovieRepository $movieRepository;
 
-    public function __construct(WatchlistRepository $watchlistRepository)
+    public function __construct(MovieRepository $movieRepository)
     {
-        $this->watchlistRepository = $watchlistRepository;
+        $this->movieRepository = $movieRepository;
     }
 
     public function getRandomArt(): string
     {
-        $movies = $this->watchlistRepository->findAll();
+        $movies = $this->movieRepository->findAll();
         $banners = [];
         $banner = '';
 

@@ -14,7 +14,7 @@ class Finder
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'finders')]
-    private ?Watchlist $movie = null;
+    private ?Movie $movie = null;
 
     #[ORM\ManyToOne(inversedBy: 'finders')]
     private ?User $user = null;
@@ -27,12 +27,12 @@ class Finder
         return $this->id;
     }
 
-    public function getMovie(): ?Watchlist
+    public function getMovie(): ?Movie
     {
         return $this->movie;
     }
 
-    public function setMovie(?Watchlist $movie): self
+    public function setMovie(?Movie $movie): self
     {
         $this->movie = $movie;
 
