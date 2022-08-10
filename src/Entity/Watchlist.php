@@ -26,7 +26,7 @@ class Watchlist
     #[ORM\Column(length: 255)]
     private ?string $thumbnail = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?float $rating = null;
 
     #[ORM\Column]
@@ -52,6 +52,9 @@ class Watchlist
 
     #[ORM\Column(length: 255)]
     private ?string $banner = 'https://creativecloud.adobe.com/content/dam/2015/8/article-marquee/article-marquee7.jpg';
+
+    #[ORM\Column(length: 255)]
+    private ?string $plexLink = null;
 
     public function getId(): ?int
     {
@@ -210,6 +213,18 @@ class Watchlist
     public function setBanner(string $banner): self
     {
         $this->banner = $banner;
+
+        return $this;
+    }
+
+    public function getPlexLink(): ?string
+    {
+        return $this->plexLink;
+    }
+
+    public function setPlexLink(string $plexLink): self
+    {
+        $this->plexLink = $plexLink;
 
         return $this;
     }

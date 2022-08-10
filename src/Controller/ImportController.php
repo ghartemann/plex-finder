@@ -37,21 +37,26 @@ class ImportController extends AbstractController
 
                 $directorNames = [];
                 foreach ($missingInfo['Video']['Director'] as $director) {
-                    $directorNames[] = $director['tag'];
+                    if (isset($director['tag']))
+                        $directorNames[] = $director['tag'];
                 }
 
                 $directorNameList = implode(', ', $directorNames);
+                
                 $watchlist = new Watchlist();
                 $watchlist
                     ->setTitle($dataElement['@attributes']['title'])
                     ->setYear($dataElement['@attributes']['year'])
                     ->setDuration($dataElement['@attributes']['duration'])
-                    ->setRating($dataElement['@attributes']['rating'])
                     ->setThumbnail($dataElement['@attributes']['thumb'])
                     ->setSummary($missingInfo["Video"]['@attributes']['summary'])
                     ->setDirector($directorNameList)
                     ->setSlug($missingInfo['Video']['@attributes']['slug'])
+                    ->setPlexLink($missingInfo['Video']['@attributes']['publicPagesURL'])
                     ->setStudio($missingInfo['Video']['@attributes']['studio']);
+
+                if (isset($dataElement['@attributes']['rating']))
+                    $watchlist->setRating($dataElement['@attributes']['rating']);
 
                 if (isset($missingInfo['Video']['@attributes']['banner']))
                     $watchlist->setBanner($missingInfo['Video']['@attributes']['art']);

@@ -3,5 +3,30 @@
 {% block title %}Plex Finder{% endblock %}
 
 {% block body %}
-    {{ movie.title }}
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="col-12 col-md-8">
+                <div class="card border-0 shadow">
+                    <img src="{{ movie.banner }}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ movie.title }}</h5>
+                        <div class="d-flex justify-content-between">
+                            <p class="card-text">Release date: {{ movie.year }}</p>
+                            <p class="card-text">Ratings: {{ movie.rating *10 }}%</p>
+                        </div>
+                        <p class="card-text">Director: {{ movie.director }}</p>
+                        <p class="card-text">{{ movie.summary }}</p>
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ path('app_watchlist_index') }}">
+                                <button class="btn btn-primary">Back</button>
+                            </a>
+                            <a href="{{ movie.plexLink }}" target="_blank">
+                                <button class="btn btn-primary">Open on Plex.tv</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

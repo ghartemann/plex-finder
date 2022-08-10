@@ -5,7 +5,10 @@
 {% block body %}
     <div class="container d-flex flex-column justify-content-center align-items-center">
         <a href="{{ path('app_import') }}">
-            <button class="btn btn-primary text-white mb-5 shadow">Sync</button>
+            <button class="btn btn-primary text-white mb-5 shadow">
+                <i class="fa-solid fa-arrow-rotate-right"></i>
+                Sync
+            </button>
         </a>
         <div class="row row-cols-1 row-cols-md-2 d-flex gap-3 justify-content-center">
             {% for movie in movies %}
@@ -22,14 +25,19 @@
                             <div class="col-md-8">
                                 <div class="card-body h-100 d-flex flex-column justify-content-between">
                                     <div>
-                                        <a href="{{ path('app_watchlist_show', {'slug': movie.slug}) }}">
-                                            <h5 class="card-title text-dark">
-                                                {{ movie.title }}
-                                                {% if movie.originalTitle %}
-                                                    ({{ movie.originalTitle }})
-                                                {% endif %}
-                                            </h5>
-                                        </a>
+                                        <div class="d-flex justify-content-between">
+                                            <a href="{{ path('app_watchlist_show', {'slug': movie.slug}) }}">
+                                                <h5 class="card-title text-dark">
+                                                    {{ movie.title }}
+                                                    {% if movie.originalTitle %}
+                                                        ({{ movie.originalTitle }})
+                                                    {% endif %}
+                                                </h5>
+                                            </a>
+                                            <p class="card-text mb-0">
+                                                <small class="text-muted">{{ loop.index }}/{{ movies|length }}</small>
+                                            </p>
+                                        </div>
                                         <a href="{{ path('app_watchlist_show', {'slug': movie.slug}) }}">
                                             <p class="card-text text-dark">{{ movie.summary|length > 230 ? movie.summary|slice(0, 230) ~ '...' : movie.summary }}</p>
                                         </a>
