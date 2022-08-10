@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
-use App\Entity\Like;
-use App\Repository\LikeRepository;
+use App\Entity\Taste;
+use App\Repository\TasteRepository;
 use App\Repository\MovieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 #[Route('/finder', name: 'app_finder_')]
 class FinderController extends AbstractController
@@ -20,21 +22,24 @@ class FinderController extends AbstractController
         return $this->render('finder/index.html.twig', ['movies' => $movies]);
     }
 
-    #[Route('/{id}/like', name: 'like')]
-    public function likeProject(Like $finder, LikeRepository $finderRepository): Response
+    #[Route('/{id}/like', name: 'like', methods: ['POST'])]
+    public function likeAjax(
+        TasteRepository $tasteRepository,
+        MovieRepository $movieRepository,
+        Request         $request
+    ): Response
     {
-        $finder->setLikeStatus(true);
-        $finderRepository->add($finder, true);
+        $movieId = $request->query->get('id');
+        dd($movieId);
+        $movie = $movieRepository->findOneBy(['id' => $movieId]);
 
-        return $this->redirectToRoute('app_finder_index');
-    }
-
-    #[Route('/{id}/dislike', name: 'dislike')]
-    public function dislikeProject(Like $finder, LikeRepository $finderRepository): Response
-    {
-        $finder->setLikeStatus(false);
-        $finderRepository->add($finder, true);
-
-        return $this->redirectToRoute('app_finder_index');
+        $like = $request->getContent() === 'true';
+        $taste = new Taste();
+        $taste
+            ->setTasteStatus($like)
+            ->setMovie($movie)
+            ->setUser($this->getUser());
+        $tasteRepository->add($taste, true);
+        return new JsonResponse();
     }
 }

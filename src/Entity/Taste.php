@@ -2,25 +2,25 @@
 
 namespace App\Entity;
 
-use App\Repository\LikeRepository;
+use App\Repository\TasteRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: LikeRepository::class)]
-class Like
+#[ORM\Entity(repositoryClass: TasteRepository::class)]
+class Taste
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'likes')]
+    #[ORM\ManyToOne(inversedBy: 'tastes')]
     private ?Movie $movie = null;
 
-    #[ORM\ManyToOne(inversedBy: 'likes')]
+    #[ORM\ManyToOne(inversedBy: 'tastes')]
     private ?User $user = null;
 
     #[ORM\Column(nullable: true)]
-    private ?bool $likeStatus = null;
+    private ?bool $tasteStatus = null;
 
     public function getId(): ?int
     {
@@ -51,14 +51,14 @@ class Like
         return $this;
     }
 
-    public function isLikeStatus(): ?bool
+    public function isTasteStatus(): ?bool
     {
-        return $this->likeStatus;
+        return $this->tasteStatus;
     }
 
-    public function setLikeStatus(?bool $likeStatus): self
+    public function setTasteStatus(?bool $tasteStatus): self
     {
-        $this->likeStatus = $likeStatus;
+        $this->tasteStatus = $tasteStatus;
 
         return $this;
     }

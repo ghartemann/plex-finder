@@ -58,12 +58,12 @@ class Movie
     #[ORM\Column(length: 255)]
     private ?string $plexLink = null;
 
-    #[ORM\OneToMany(mappedBy: 'movie', targetEntity: Like::class)]
-    private Collection $likes;
+    #[ORM\OneToMany(mappedBy: 'movie', targetEntity: Taste::class)]
+    private Collection $tastes;
 
     public function __construct()
     {
-        $this->likes = new ArrayCollection();
+        $this->tastes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -240,29 +240,29 @@ class Movie
     }
 
     /**
-     * @return Collection<int, Like>
+     * @return Collection<int, Taste>
      */
-    public function getLikes(): Collection
+    public function getTastes(): Collection
     {
-        return $this->likes;
+        return $this->tastes;
     }
 
-    public function addLike(Like $like): self
+    public function addTaste(Taste $taste): self
     {
-        if (!$this->likes->contains($like)) {
-            $this->likes->add($like);
-            $like->setMovie($this);
+        if (!$this->tastes->contains($taste)) {
+            $this->tastes->add($taste);
+            $taste->setMovie($this);
         }
 
         return $this;
     }
 
-    public function removeLike(Like $like): self
+    public function removeTaste(Taste $taste): self
     {
-        if ($this->likes->removeElement($like)) {
+        if ($this->tastes->removeElement($taste)) {
             // set the owning side to null (unless already changed)
-            if ($like->getMovie() === $this) {
-                $like->setMovie(null);
+            if ($taste->getMovie() === $this) {
+                $taste->setMovie(null);
             }
         }
 

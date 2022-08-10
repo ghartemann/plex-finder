@@ -29,12 +29,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Like::class)]
-    private Collection $likes;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Taste::class)]
+    private Collection $tastes;
 
     public function __construct()
     {
-        $this->likes = new ArrayCollection();
+        $this->tastes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -108,29 +108,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Like>
+     * @return Collection<int, Taste>
      */
-    public function getLikes(): Collection
+    public function getTastes(): Collection
     {
-        return $this->likes;
+        return $this->tastes;
     }
 
-    public function addLike(Like $like): self
+    public function addTaste(Taste $taste): self
     {
-        if (!$this->likes->contains($like)) {
-            $this->likes->add($like);
-            $like->setUser($this);
+        if (!$this->tastes->contains($taste)) {
+            $this->tastes->add($taste);
+            $taste->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeLike(Like $like): self
+    public function removeTaste(Taste $taste): self
     {
-        if ($this->likes->removeElement($like)) {
+        if ($this->tastes->removeElement($taste)) {
             // set the owning side to null (unless already changed)
-            if ($like->getUser() === $this) {
-                $like->setUser(null);
+            if ($taste->getUser() === $this) {
+                $taste->setUser(null);
             }
         }
 

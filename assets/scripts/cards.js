@@ -68,9 +68,9 @@ allCards.forEach(function (el) {
         }
         let superAttributeId = parseInt(event.target.getAttribute("data-interestid"))
         if (event.deltaX < 0) {
-            ajaxPost('/' + superAttributeId + '/like/project-ajax', false);
+            ajaxPost('/finder/' + superAttributeId + '/like', false);
         } else {
-            ajaxPost('/' + superAttributeId + '/like/project-ajax', true);
+            ajaxPost('/finder/' + superAttributeId + '/like', true);
         }
     });
 });
