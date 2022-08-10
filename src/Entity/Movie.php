@@ -58,12 +58,12 @@ class Movie
     #[ORM\Column(length: 255)]
     private ?string $plexLink = null;
 
-    #[ORM\OneToMany(mappedBy: 'movie', targetEntity: Finder::class)]
-    private Collection $finders;
+    #[ORM\OneToMany(mappedBy: 'movie', targetEntity: Like::class)]
+    private Collection $likes;
 
     public function __construct()
     {
-        $this->finders = new ArrayCollection();
+        $this->likes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -240,29 +240,29 @@ class Movie
     }
 
     /**
-     * @return Collection<int, Finder>
+     * @return Collection<int, Like>
      */
-    public function getFinders(): Collection
+    public function getLikes(): Collection
     {
-        return $this->finders;
+        return $this->likes;
     }
 
-    public function addFinder(Finder $finder): self
+    public function addLike(Like $like): self
     {
-        if (!$this->finders->contains($finder)) {
-            $this->finders->add($finder);
-            $finder->setMovie($this);
+        if (!$this->likes->contains($like)) {
+            $this->likes->add($like);
+            $like->setMovie($this);
         }
 
         return $this;
     }
 
-    public function removeFinder(Finder $finder): self
+    public function removeLike(Like $like): self
     {
-        if ($this->finders->removeElement($finder)) {
+        if ($this->likes->removeElement($like)) {
             // set the owning side to null (unless already changed)
-            if ($finder->getMovie() === $this) {
-                $finder->setMovie(null);
+            if ($like->getMovie() === $this) {
+                $like->setMovie(null);
             }
         }
 

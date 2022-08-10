@@ -29,12 +29,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Finder::class)]
-    private Collection $finders;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Like::class)]
+    private Collection $likes;
 
     public function __construct()
     {
-        $this->finders = new ArrayCollection();
+        $this->likes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -61,7 +61,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
@@ -108,29 +108,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Finder>
+     * @return Collection<int, Like>
      */
-    public function getFinders(): Collection
+    public function getLikes(): Collection
     {
-        return $this->finders;
+        return $this->likes;
     }
 
-    public function addFinder(Finder $finder): self
+    public function addLike(Like $like): self
     {
-        if (!$this->finders->contains($finder)) {
-            $this->finders->add($finder);
-            $finder->setUser($this);
+        if (!$this->likes->contains($like)) {
+            $this->likes->add($like);
+            $like->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeFinder(Finder $finder): self
+    public function removeLike(Like $like): self
     {
-        if ($this->finders->removeElement($finder)) {
+        if ($this->likes->removeElement($like)) {
             // set the owning side to null (unless already changed)
-            if ($finder->getUser() === $this) {
-                $finder->setUser(null);
+            if ($like->getUser() === $this) {
+                $like->setUser(null);
             }
         }
 

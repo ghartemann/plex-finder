@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Finder;
+use App\Entity\Like;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Finder>
+ * @extends ServiceEntityRepository<Like>
  *
- * @method Finder|null find($id, $lockMode = null, $lockVersion = null)
- * @method Finder|null findOneBy(array $criteria, array $orderBy = null)
- * @method Finder[]    findAll()
- * @method Finder[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Like|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Like|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Like[]    findAll()
+ * @method Like[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class FinderRepository extends ServiceEntityRepository
+class LikeRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Finder::class);
+        parent::__construct($registry, Like::class);
     }
 
-    public function add(Finder $entity, bool $flush = false): void
+    public function add(Like $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class FinderRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Finder $entity, bool $flush = false): void
+    public function remove(Like $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 

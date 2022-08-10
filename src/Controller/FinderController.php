@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Finder;
-use App\Repository\FinderRepository;
+use App\Entity\Like;
+use App\Repository\LikeRepository;
 use App\Repository\MovieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +21,7 @@ class FinderController extends AbstractController
     }
 
     #[Route('/{id}/like', name: 'like')]
-    public function likeProject(Finder $finder, FinderRepository $finderRepository): Response
+    public function likeProject(Like $finder, LikeRepository $finderRepository): Response
     {
         $finder->setLikeStatus(true);
         $finderRepository->add($finder, true);
@@ -30,7 +30,7 @@ class FinderController extends AbstractController
     }
 
     #[Route('/{id}/dislike', name: 'dislike')]
-    public function dislikeProject(Finder $finder, FinderRepository $finderRepository): Response
+    public function dislikeProject(Like $finder, LikeRepository $finderRepository): Response
     {
         $finder->setLikeStatus(false);
         $finderRepository->add($finder, true);
