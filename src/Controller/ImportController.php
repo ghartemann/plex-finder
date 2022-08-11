@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Movie;
+use App\Entity\Taste;
 use App\Repository\MovieRepository;
+use App\Repository\TasteRepository;
+use App\Repository\UserRepository;
 use App\Service\WatchlistService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +27,9 @@ class ImportController extends AbstractController
     #[Route('/import', name: 'app_import')]
     public function import(
         MovieRepository  $movieRepository,
-        WatchlistService $watchlistService
+        WatchlistService $watchlistService,
+        TasteRepository  $tasteRepository,
+        UserRepository   $userRepository
     ): Response
     {
         // fetching data from service
@@ -70,6 +75,18 @@ class ImportController extends AbstractController
                 }
 
                 $movieRepository->add($movie, true);
+
+                $users = $userRepository->findAll();
+
+                foreach ($users as $user) {
+                    $taste = new Taste();
+                    $taste
+                        ->setMovie($movie)
+                        ->setUser($user)
+                        ->setTasteStatus(null);
+
+                    $tasteRepository->add($taste, true);
+                }
             }
         }
 

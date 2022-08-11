@@ -39,6 +39,17 @@ class MovieRepository extends ServiceEntityRepository
         }
     }
 
+    public function findLikeNull(): mixed
+    {
+        $queryBuilder = $this->createQueryBuilder('m')
+            ->join('m.tastes', 't')
+            ->addSelect('t')
+            ->where('m.tastes IS EMPTY')
+            ->getQuery();
+
+        return $queryBuilder->getResult();
+    }
+
 //    /**
 //     * @return Movie[] Returns an array of Movie objects
 //     */

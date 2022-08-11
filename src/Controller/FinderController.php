@@ -15,31 +15,38 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class FinderController extends AbstractController
 {
     #[Route('', name: 'index')]
-    public function index(MovieRepository $movieRepository): Response
+    public function index(TasteRepository $tasteRepository): Response
     {
-        $movies = $movieRepository->findAll();
+        $tastes = $tasteRepository->findAll();
 
-        return $this->render('finder/index.html.twig', ['movies' => $movies]);
+        return $this->render('finder/index.html.twig', ['tastes' => $tastes]);
     }
 
     #[Route('/{id}/like', name: 'like', methods: ['POST'])]
     public function likeAjax(
         TasteRepository $tasteRepository,
-        MovieRepository $movieRepository,
         Request         $request
     ): Response
     {
-        $movieId = $request->query->get('id');
-        dd($movieId);
-        $movie = $movieRepository->findOneBy(['id' => $movieId]);
+        $movieId = $request->get('id');
 
         $like = $request->getContent() === 'true';
-        $taste = new Taste();
-        $taste
-            ->setTasteStatus($like)
-            ->setMovie($movie)
-            ->setUser($this->getUser());
+        $taste = $tasteRepository->findOneBy(['movie' => $movieId]);
+        $taste->setTasteStatus($like);
         $tasteRepository->add($taste, true);
         return new JsonResponse();
+    }
+
+    #[Route('/reset', name: 'reset')]
+    public function reset(TasteRepository $tasteRepository)
+    {
+        $tastes = $tasteRepository->findBy(['user' => $this->getUser()->getId()]);
+
+        foreach ($tastes as $taste) {
+            $taste->setTasteStatus(null);
+            $tasteRepository->add($taste, true);
+        }
+
+        return $this->redirectToRoute('app_finder_index');
     }
 }

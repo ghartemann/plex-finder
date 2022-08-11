@@ -1,5 +1,5 @@
 'use strict';
-const interestId = document.getElementById('interestId').innerHTML;
+const interestId = document.getElementsByClassName('interestId');
 
 const tinderContainer = document.querySelector('.tinder');
 const allCards = document.querySelectorAll('.tinder--card');
@@ -48,7 +48,7 @@ allCards.forEach(function (el) {
         tinderContainer.classList.remove('tinder_nope');
 
         let moveOutWidth = document.body.clientWidth;
-        let keep = Math.abs(event.deltaX) < 80 || Math.abs(event.velocityX) < 0.5;
+        let keep = Math.abs(event.deltaX) < 80 || Math.abs(event.velocityX) < 0.1;
 
         event.target.classList.toggle('removed', !keep);
 

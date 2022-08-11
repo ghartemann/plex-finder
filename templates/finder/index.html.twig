@@ -3,62 +3,45 @@
 {% block title %}Hello FinderController!{% endblock %}
 
 {% block body %}
-    <div class="container center d-none">
-        {% for movie in movies %}
-            {% if loop.index == 1 %}
-                <div class="card border-0" id='tinder' style="width: 18rem;">
-                    <img src="{{ movie.thumbnail }}" class="card-img-top" alt="{{ movie.title }} cover">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ movie.title }}</h5>
-                        <p class="d-none" id="interestId">{{ movie.id }}</p>
-                        <button class="btn">
-                            <a href="#" class="btn btn-danger" value="dislike">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                     class="bi bi-x-circle" viewBox="0 0 16 16">
-                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                </svg>
-                            </a>
-                        </button>
-                        <button class="btn">
-                            <a href="#" class="btn btn-primary" value="like">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                     class="bi bi-heart-fill" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd"
-                                          d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
-                                </svg>
-                            </a>
-                        </button>
-                    </div>
-                </div>
-            {% endif %}
-        {% endfor %}
-    </div>
+    {% if tastes %}
+        <div class="tinder">
 
-    {% if not movies %}
-        <div class="container">
-            <div class="row">
-                <div class="col-12 d-flex flex-column justify-content-center" style="min-height: 100vh">
-                    <h2 class="text-center pt-5 mt-5 text-white">Nothing to display... yet?</h2>
-                </div>
+            <div class="tinder--status">
+                <i class="fa fa-remove"></i>
+                <i class="fa-solid fa-check"></i>
             </div>
+
+            <div class="tinder--cards">
+                {% for taste in tastes %}
+                    {% if app.user.id == taste.user.id %}
+                        {% if taste.tasteStatus is same as(null) %}
+                            <div class="tinder--card shadow" data-interestid="{{ taste.movie.id }}">
+                                <img src="{{ taste.movie.thumbnail }}">
+                                {#                    <h3 class="text-primary">{{ movie.title }}</h3> #}
+                                <p class="text-dark">{{ taste.tasteStatus }}</p>
+                                <p class="d-none interestId">{{ taste.movie.id }}</p>
+                            </div>
+                        {% else %}
+                            {# TODO: this doesn't work #}
+                            {% if loop.index == tastes|length %}
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12 d-flex flex-column justify-content-center"
+                                             style="min-height: 100vh">
+                                            <h2 class="text-center pt-5 mt-5 text-white">You've either swiped all the
+                                                movies or your watchlist is empty.</h2>
+                                            <a href="{{ path('app_finder_reset') }}">
+                                                <button class="btn btn-primary">Reset?</button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+
         </div>
     {% endif %}
-
-    <div class="tinder">
-        <div class="tinder--status">
-            <i class="fa fa-remove"></i>
-            <i class="fa fa-heart"></i>
-        </div>
-
-        <div class="tinder--cards">
-            {% for movie in movies %}
-                <div class="tinder--card shadow" data-interestid="{{ movie.id }}">
-                    <img src="{{ movie.thumbnail }}">
-                    <h3 class="text-primary">{{ movie.title }}</h3>
-                    <p class="d-none" id="interestId">{{ movie.id }}</p>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
 {% endblock %}
