@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello FinderController!{% endblock %}
+{% block title %}Finder - {% endblock %}
 
 {% block body %}
     {% if tastes %}
@@ -11,13 +11,19 @@
                 <i class="fa-solid fa-check"></i>
             </div>
 
+            <div class="d-flex justify-content-center">
+                <a href="{{ path('app_finder_reset') }}">
+                    <button class="btn btn-primary text-white">Reset?</button>
+                </a>
+            </div>
+
             <div class="tinder--cards">
                 {% for taste in tastes %}
                     {% if app.user.id == taste.user.id %}
                         {% if taste.tasteStatus is same as(null) %}
                             <div class="tinder--card shadow" data-interestid="{{ taste.movie.id }}">
                                 <img src="{{ taste.movie.thumbnail }}">
-                                {#                    <h3 class="text-primary">{{ movie.title }}</h3> #}
+                                {# <h3 class="text-primary">{{ movie.title }}</h3> #}
                                 <p class="text-dark">{{ taste.tasteStatus }}</p>
                                 <p class="d-none interestId">{{ taste.movie.id }}</p>
                             </div>
@@ -30,9 +36,6 @@
                                              style="min-height: 100vh">
                                             <h2 class="text-center pt-5 mt-5 text-white">You've either swiped all the
                                                 movies or your watchlist is empty.</h2>
-                                            <a href="{{ path('app_finder_reset') }}">
-                                                <button class="btn btn-primary">Reset?</button>
-                                            </a>
                                         </div>
                                     </div>
                                 </div>

@@ -31,9 +31,6 @@ class Movie
     #[ORM\Column(nullable: true)]
     private ?float $rating = null;
 
-    #[ORM\Column]
-    private ?bool $status = true;
-
     #[ORM\Column(type: Types::TEXT)]
     private ?string $summary = null;
 
@@ -61,9 +58,16 @@ class Movie
     #[ORM\OneToMany(mappedBy: 'movie', targetEntity: Taste::class)]
     private Collection $tastes;
 
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'movies')]
+    private Collection $user;
+
+    #[ORM\Column(length: 255)]
+    private ?string $ratingKey = null;
+
     public function __construct()
     {
         $this->tastes = new ArrayCollection();
+        $this->user = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -127,18 +131,6 @@ class Movie
     public function setRating(float $rating): self
     {
         $this->rating = $rating;
-
-        return $this;
-    }
-
-    public function isStatus(): ?bool
-    {
-        return $this->status;
-    }
-
-    public function setStatus(bool $status): self
-    {
-        $this->status = $status;
 
         return $this;
     }
@@ -265,6 +257,42 @@ class Movie
                 $taste->setMovie(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUser(): Collection
+    {
+        return $this->user;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->user->contains($user)) {
+            $this->user->add($user);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        $this->user->removeElement($user);
+
+        return $this;
+    }
+
+    public function getRatingKey(): ?string
+    {
+        return $this->ratingKey;
+    }
+
+    public function setRatingKey(string $ratingKey): self
+    {
+        $this->ratingKey = $ratingKey;
 
         return $this;
     }

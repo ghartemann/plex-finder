@@ -32,9 +32,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Taste::class)]
     private Collection $tastes;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $mate = null;
+
+    #[ORM\ManyToMany(targetEntity: Movie::class, mappedBy: 'user')]
+    private Collection $movies;
+
     public function __construct()
     {
         $this->tastes = new ArrayCollection();
+        $this->movies = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -132,6 +139,45 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             if ($taste->getUser() === $this) {
                 $taste->setUser(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function getMate(): ?string
+    {
+        return $this->mate;
+    }
+
+    public function setMate(?string $mate): self
+    {
+        $this->mate = $mate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Movie>
+     */
+    public function getMovies(): Collection
+    {
+        return $this->movies;
+    }
+
+    public function addMovie(Movie $movie): self
+    {
+        if (!$this->movies->contains($movie)) {
+            $this->movies->add($movie);
+            $movie->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMovie(Movie $movie): self
+    {
+        if ($this->movies->removeElement($movie)) {
+            $movie->removeUser($this);
         }
 
         return $this;

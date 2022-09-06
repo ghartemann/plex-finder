@@ -16,7 +16,7 @@
         </a>
         <div class="row row-cols-1 row-cols-md-2 d-flex gap-3 justify-content-center">
             {% for movie in movies %}
-                {% if movie.status %}
+                {% if app.user in movie.user %}
 
                     <div class="card mb-3 p-0 shadow border-0" style="max-width: 540px;">
                         <div class="row g-0">

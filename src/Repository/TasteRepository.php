@@ -39,28 +39,21 @@ class TasteRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Finder[] Returns an array of Finder objects
-//     */
-//    public function findByExampleField($value): array
+    // TODO: make this work
+//    public function findMatches($moviesCollect): array
 //    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('f.id', 'ASC')
-//            ->setMaxResults(10)
+//        return $this->createQueryBuilder('t')
+//            ->select('count(t) nb, t.movie')
+//            ->join('t.movie', 'm')
+//            ->addSelect('m')
+//            ->where('t.tasteStatus = true')
+//            ->andWhere('m.id IN (:movies)')
+//            ->setParameter('movies', $moviesCollect)
+//            ->groupBy('m')
+//            ->having('nb > 1')
+//            ->orderBy('t.id', 'ASC')
 //            ->getQuery()
-//            ->getResult()
-//        ;
+//            ->getResult();
 //    }
 
-//    public function findOneBySomeField($value): ?Finder
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

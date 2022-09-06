@@ -9,6 +9,22 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture
 {
+    public const USERS = [
+        [
+            'email' => 'g.hartemann@gmail.com',
+            'password' => 'password',
+            'roles' => ['ROLE_ADMIN', 'ROLE_USER'],
+            'mate' => 'aurianephd@gmail.com',
+        ],
+        [
+            'email' => 'aurianephd@gmail.com',
+            'password' => 'password',
+            'roles' => ['ROLE_USER'],
+            'mate' => 'g.hartemann@gmail.com',
+        ],
+
+    ];
+
     private UserPasswordHasherInterface $passwordHasher;
 
     public function __construct(UserPasswordHasherInterface $passwordHasher)
@@ -18,33 +34,18 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        // user 1
-        $user = new User();
+        foreach (self::USERS as $userInput) {
+            $user = new User();
 
-        $hashedPassword = $this->passwordHasher->hashPassword(
-            $user,
-            'password'
-        );
+            $hashedPassword = $this->passwordHasher->hashPassword($user, $userInput['password']);
 
-        $user
-            ->setEmail("g.hartemann@gmail.com")
-            ->setRoles(['ROLE_ADMIN', 'ROLE_USER'])
-            ->setPassword($hashedPassword);
-        $manager->persist($user);
-
-        // user 2
-        $user = new User();
-
-        $hashedPassword = $this->passwordHasher->hashPassword(
-            $user,
-            'password'
-        );
-
-        $user
-            ->setEmail('aurianephd@gmail.com')
-            ->setRoles(['ROLE_USER'])
-            ->setPassword($hashedPassword);
-        $manager->persist($user);
+            $user
+                ->setEmail($userInput['email'])
+                ->setPassword($hashedPassword)
+                ->setRoles($userInput['roles'])
+                ->setMate($userInput['mate']);
+            $manager->persist($user);
+        }
 
         $manager->flush();
     }

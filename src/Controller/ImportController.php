@@ -3,10 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Movie;
-use App\Entity\Taste;
+use App\Entity\User;
 use App\Repository\MovieRepository;
-use App\Repository\TasteRepository;
-use App\Repository\UserRepository;
 use App\Service\WatchlistService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,12 +26,13 @@ class ImportController extends AbstractController
     public function import(
         MovieRepository  $movieRepository,
         WatchlistService $watchlistService,
-        TasteRepository  $tasteRepository,
-        UserRepository   $userRepository
     ): Response
     {
         // fetching data from service
         $data = $watchlistService->getWatchlist();
+
+        /** @var $currentUser User */
+        $currentUser = $this->getUser();
 
         foreach ($data["Video"] as $dataElement) {
             if ($movieRepository->findOneBy(['title' => $dataElement['@attributes']['title']]) == null) {
@@ -42,14 +41,17 @@ class ImportController extends AbstractController
 
                 $directorNames = [];
                 foreach ($missingInfo['Video']['Director'] as $director) {
-                    if (isset($director['tag']))
+                    if (isset($director['tag'])) {
                         $directorNames[] = $director['tag'];
+                    }
                 }
 
                 $directorNameList = implode(', ', $directorNames);
 
                 $movie = new Movie();
                 $movie
+                    ->addUser($currentUser)
+                    ->setRatingKey($dataElement['@attributes']['ratingKey'])
                     ->setTitle($dataElement['@attributes']['title'])
                     ->setYear($dataElement['@attributes']['year'])
                     ->setDuration($dataElement['@attributes']['duration'])
@@ -60,14 +62,17 @@ class ImportController extends AbstractController
                     ->setPlexLink($missingInfo['Video']['@attributes']['publicPagesURL'])
                     ->setStudio($missingInfo['Video']['@attributes']['studio']);
 
-                if (isset($dataElement['@attributes']['rating']))
+                if (isset($dataElement['@attributes']['rating'])) {
                     $movie->setRating($dataElement['@attributes']['rating']);
+                }
 
-                if (isset($missingInfo['Video']['@attributes']['banner']))
+                if (isset($missingInfo['Video']['@attributes']['banner'])) {
                     $movie->setBanner($missingInfo['Video']['@attributes']['art']);
+                }
 
-                if (isset($missingInfo['Video']['@attributes']['tagline']))
+                if (isset($missingInfo['Video']['@attributes']['tagline'])) {
                     $movie->setTagline($missingInfo['Video']['@attributes']['tagline']);
+                }
 
                 // TODO: this doesn't work
                 if (isset($missingInfo['Video']['@attributes']['originaltitle'])) {
@@ -76,34 +81,34 @@ class ImportController extends AbstractController
 
                 $movieRepository->add($movie, true);
 
-                $users = $userRepository->findAll();
-
-                foreach ($users as $user) {
-                    $taste = new Taste();
-                    $taste
-                        ->setMovie($movie)
-                        ->setUser($user)
-                        ->setTasteStatus(null);
-
-                    $tasteRepository->add($taste, true);
-                }
+                // old way to do things
+//                $users = $userRepository->findAll();
+//
+//                foreach ($users as $user) {
+//                    $taste = new Taste();
+//                    $taste
+//                        ->setMovie($movie)
+//                        ->setUser($user)
+//                        ->setTasteStatus(null);
+//
+//                    $tasteRepository->add($taste, true);
+//                }
             }
         }
 
-        // hide entries that aren't in Plex movie any more
+        // hide entries that aren't in Plex watchlist any more
         $movies = $movieRepository->findAll();
 
-        $moviesFromAPI = $watchlistService->getWatchlist();
-        $moviesTitles = [];
+        $moviesRatingKeys = [];
 
-        foreach ($moviesFromAPI['Video'] as $movieSingular) {
-            $moviesTitles[] = $movieSingular['@attributes']['title'];
+        foreach ($data['Video'] as $movieSingular) {
+            $moviesRatingKeys[] = $movieSingular['@attributes']['ratingKey'];
         }
 
         foreach ($movies as $movie) {
-            if (!in_array($movie->getTitle(), $moviesTitles)) {
-                $movie = $movieRepository->findOneBy(['title' => $movie->getTitle()]);
-                $movie->setStatus(false);
+            if (!in_array($movie->getRatingKey(), $moviesRatingKeys, true)) {
+                $movie = $movieRepository->findOneBy(['ratingKey' => $movie->getRatingKey()]);
+                $movie->removeUser($currentUser);
                 $movieRepository->add($movie, true);
             }
         }
